@@ -535,5 +535,125 @@
     </footer>
 
     <script src="script.js"></script>
+
+  <!-- Social Proof Popups -->
+  <style>
+    .sp-popup {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.14);
+      padding: 13px 18px 13px 14px;
+      max-width: 300px;
+      border-left: 4px solid #ffd600;
+      animation: sp-in .4s cubic-bezier(.22,1,.36,1) both;
+      cursor: default;
+    }
+    .sp-popup.sp-hide {
+      animation: sp-out .35s ease forwards;
+    }
+    @keyframes sp-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes sp-out {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(16px); }
+    }
+    .sp-avatar {
+      width: 40px; height: 40px; min-width: 40px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem; font-weight: 700; color: #ffd600;
+      font-family: 'Cabinet Grotesk', sans-serif;
+    }
+    .sp-text { font-family: 'Satoshi', sans-serif; }
+    .sp-text strong {
+      display: block;
+      font-size: .82rem; font-weight: 700; color: #111;
+      line-height: 1.35;
+    }
+    .sp-text span {
+      font-size: .75rem; color: #777; display: block; margin-top: 2px;
+    }
+    .sp-close {
+      position: absolute; top: 7px; right: 9px;
+      background: none; border: none; cursor: pointer;
+      font-size: .8rem; color: #bbb; line-height: 1;
+      padding: 0;
+    }
+    .sp-close:hover { color: #888; }
+    @media (max-width: 480px) {
+      .sp-popup { max-width: calc(100vw - 48px); bottom: 16px; left: 16px; }
+    }
+  </style>
+
+  <script>
+    (function () {
+      var notifications = [
+        { initials: 'AM', name: 'Ana M. de São Paulo', msg: 'acabou de garantir o Pack Ulysses Design', time: 'há 2 minutos' },
+        { initials: 'RO', name: '37 advogados', msg: 'compraram o Pack nas últimas 24 horas', time: 'hoje' },
+        { initials: 'CS', name: 'Carlos S. do Rio de Janeiro', msg: 'adquiriu o Pack e já está postando', time: 'há 8 minutos' },
+        { initials: 'JF', name: 'Juliana F. de Belo Horizonte', msg: 'garantiu acesso ao Pack completo', time: 'há 14 minutos' },
+        { initials: 'MP', name: '12 pessoas estão vendo', msg: 'esta página agora mesmo', time: 'neste momento' },
+        { initials: 'TB', name: 'Thiago B. de Curitiba', msg: 'comprou o Pack Ulysses Design', time: 'há 21 minutos' },
+        { initials: 'LS', name: 'Larissa S. de Fortaleza', msg: 'acabou de finalizar a compra', time: 'há 3 minutos' },
+        { initials: 'PV', name: '53 advogados', msg: 'já transformaram seu perfil com o Pack', time: 'esta semana' },
+      ];
+
+      var idx = 0;
+      var popup = null;
+      var hideTimer = null;
+      var nextTimer = null;
+
+      function show() {
+        if (popup) { popup.parentNode && popup.parentNode.removeChild(popup); clearTimeout(hideTimer); }
+
+        var n = notifications[idx % notifications.length];
+        idx++;
+
+        popup = document.createElement('div');
+        popup.className = 'sp-popup';
+        popup.innerHTML =
+          '<div class="sp-avatar">' + n.initials + '</div>' +
+          '<div class="sp-text">' +
+            '<strong>' + n.name + ' ' + n.msg + '</strong>' +
+            '<span>&#128205; ' + n.time + '</span>' +
+          '</div>' +
+          '<button class="sp-close" aria-label="Fechar">&#10005;</button>';
+
+        popup.querySelector('.sp-close').addEventListener('click', function () { dismiss(); });
+        document.body.appendChild(popup);
+
+        hideTimer = setTimeout(function () { dismiss(); }, 5000);
+      }
+
+      function dismiss() {
+        if (!popup) return;
+        popup.classList.add('sp-hide');
+        var p = popup;
+        setTimeout(function () { p.parentNode && p.parentNode.removeChild(p); }, 380);
+        popup = null;
+        clearTimeout(hideTimer);
+      }
+
+      function schedule() {
+        show();
+        nextTimer = setTimeout(schedule, 10000);
+      }
+
+      // Começa após 4s de carregamento
+      setTimeout(schedule, 4000);
+    })();
+  </script>
+  <!-- End Social Proof Popups -->
+
 </body>
 </html>
